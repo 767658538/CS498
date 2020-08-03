@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+
+<script src="https://d3js.org/d3.v4.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<br></br>
+<h1>            &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   Movie Data</h1>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<button onclick="location.href='\index.html';">Page 1</button>
+<button onclick="location.href='\Page2.html';">Page 2</button>
+<button onclick="location.href='\Page3.html';">Page 3</button>
+<button onclick="location.href='\Page4.html';">Page 4</button>
+
+<p style=" margin-left: 2.5em;padding: 0 7em 2em 0;border-width: 0px; border-color: black; border-style:solid ;width:20%;height:85%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The bar chart below shows the compartive number of Action and Comedy movies for a give log revenue. The log function was applied to smooth the graph for better visibility. The data include every comedy and action movie made from year 1994 to 2014. We can see that in fact there are many more comedy movies made. In fact for most ranges in the lower portion and around meadian there are many more comedy movies made. The few blockbuster action movies on the far right overwhelms the adventage in numbers Comedy movies have. The total revenue of all Comedy movies sum up to $56 billion while Action movies get a wooping $77 billion.</p>
+
+
+<div id="bar">
+
+
+<script>
+var margin = {top: 15, right: 35, bottom: 35, left: 45},
+    width = 510 - margin.left - margin.right,
+    height = 410 - margin.top - margin.bottom;
+
+var svg = d3.select("#bar")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+d3.csv("https://raw.githubusercontent.com/767658538/498.github.io/master/Compare.csv", function(data) {
+  var x = d3.scaleLinear()
+      .domain([0,10])     
+      .range([0, width]);
+  svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+  var histogram = d3.histogram()
+      .value(function(d) { return +(d.revenue); })  
+      .domain(x.domain())  // then the domain of the graphic
+      .thresholds(x.ticks(40)); // then the numbers of bins
+  var bins1 = histogram(data.filter( function(d){return d.Genres === "Action"} ));
+  var bins2 = histogram(data.filter( function(d){return d.Genres === "Comedy"} ));
+  var y = d3.scaleLinear()
+      .range([height, 0]);
+      y.domain([0, 100]); 
+  svg.append("g")
+      .call(d3.axisLeft(y));
+  svg.selectAll("rect")
+      .data(bins1)
+      .enter()
+      .append("rect")
+        .attr("x", 1)
+        .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
+        .attr("width", function(d) { return x(d.x1) - x(d.x0) -1 ; })
+        .attr("height", function(d) { return height - y(d.length); })
+        .style("fill", "#9370DB")
+        .style("opacity", 0.6)
+  svg.selectAll("rect2")
+      .data(bins2)
+      .enter()
+      .append("rect")
+        .attr("x", 1)
+        .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
+        .attr("width", function(d) { return x(d.x1) - x(d.x0) -1 ; })
+        .attr("height", function(d) { return height - y(d.length); })
+        .style("fill", "#FF1694")
+        .style("opacity", 0.6)
+  svg.append("circle").attr("cx",20).attr("cy",20).attr("r", 6).style("fill", "#9370DB")
+  svg.append("circle").attr("cx",20).attr("cy",40).attr("r", 6).style("fill", "#FF1694")
+  svg.append("text").attr("x", 35).attr("y", 20).text("Action").style("font-size", "15px").attr("alignment-baseline","middle")
+  svg.append("text").attr("x", 35).attr("y", 40).text("Comedy").style("font-size", "15px").attr("alignment-baseline","middle")
+  svg.append("text").attr("x", -200).attr("y", -30).text("Movie count").style("font-size", "15px").attr("alignment-baseline","middle").attr("transform", "rotate(-90)");
+  svg.append("text").attr("x",150).attr("y", 383).text("Revenue (Log $)").style("font-size", "13px").attr("alignment-baseline","middle");
+
+});
+</script>
+</div>

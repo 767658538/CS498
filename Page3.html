@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<br></br>
+<h1>            &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   Movie Data</h1>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<button onclick="location.href='\index.html';">Page 1</button>
+<button onclick="location.href='\Page2.html';">Page 2</button>
+<button onclick="location.href='\Page3.html';">Page 3</button>
+<button onclick="location.href='\Page4.html';">Page 4</button>
+
+<p style=" margin-left: 2.5em;padding: 0 7em 2em 0;border-width: 0px; border-color: black; border-style:solid ;width:25%;height:80%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Over the years, we can observe that there was a dip in Action movies (2005 to 2008) but it quickly picks back up again. There are a few genres that consumers consistantly like and often show up as one of the top 5 earning genre of the year. The total revenue of a genre can be skewed by a few block buster movies even if the total number of movies produced in that genre is lacking, for example Action movies. (Note: The labeling seems to not refresh correct hence I added a side note below the chart to reference top 5 genre, the color coding is consistant)</p>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="number" min="1994" max="2014" id="yearbutton" value=1994>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+<div id="pie">
+<script>
+
+var width = 550
+    height = 500
+    margin = 35
+
+var radius = Math.min(width, height) / 2 - margin
+
+var svg = d3.select("#pie")
+  .append("svg")
+    .attr("width", width)
+    .attr("height", height)
+  .append("g")
+    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+var data1994 = {Action:0.250147509,Comedy:0.219538483,Drama:0.113397658,Family:0.107173526,Fantasy:0.100622459,Other:0.209120365}
+var data2014 = {Action:0.288058832,SciFi:0.115385569,Adventure:0.111033384,Comedy:0.088261536,Drama:0.076569764,Other:0.320690915}
+
+var data1995 = {Action:0.28169019,Drama:0.152224451,Adventure:0.14948694,Comedy:0.128338329,Crime:0.08582095,Other:0.28826009}
+var data1996 = {Action:0.362286286,Comedy:0.196570429,Drama:0.13713875,Crime:0.091666828,Adventure:0.074776953,Other:0.212337707}
+var data1997 = {Drama:0.273468524,Action:0.236025175,Comedy:0.217657497,Adventure:0.129461205,Crime:0.036364315,Other:0.143387599}
+var data1998 = {Action:0.205557025,Comedy:0.184596986,Drama:0.157313448,Adventure:0.106342045,Romance:0.086766312,Other:0.346190496}
+var data1999 = {Action:0.229809469,Comedy:0.161974788,Drama:0.152500263,Action:0.103428086,Animation:0.074201514,Other:0.352287394}
+var data2000 = {Comedy:0.213960452,Action:0.189410173,Adventure:0.165765206,Drama:0.156728454,Animation:0.056941777,Other:0.274135715}
+var data2001 = {Adventure:0.275240402,Action:0.17464062,Comedy:0.162657774,Drama:0.127908582,Thriller:0.068521098,Other:0.259552622}
+var data2002 = {Adventure:0.211082493,Action:0.177635538,Comedy:0.126397411,Drama:0.182744538,Thriller:0.039192805,Other:0.30214002}
+var data2003 = {Adventure:0.27388768,Comedy:0.178909204,Action:0.178020395,Drama:0.131223648,Animation:0.063984957,Other:0.237959073}
+var data2004 = {Action:0.218827976,Adventure:0.214616156,Drama:0.162871965,Comedy:0.161968512,Horror:0.04678769,Other:0.241715391}
+var data2005 = {Adventure:0.237044941,Comedy:0.170564079,Action:0.160640913,Drama:0.158405046,ScienceFiction:0.052868186,Other:0.273345021}
+var data2006 = {Adventure:0.207743616,Comedy:0.194129428,Drama:0.16699539,Action:0.137334961,Animation:0.103905831,Other:0.293796605}
+var data2007 = {Adventure:0.204756673,Comedy:0.152212676,Action:0.134768088,Drama:0.125561824,Fantasy:0.104617114,Other:0.382700739}
+var data2008 = {Adventure:0.225135697,Drama:0.189308966,Comedy:0.184501278,Action:0.152958431,Animation:0.068651228,Other:0.248095628}
+var data2009 = {Action:0.262337806,Comedy:0.165591603,Adventure:0.137508233,Animation:0.1235382,Drama:0.101569818,Other:0.311024158}
+var data2010 = {Action:0.196454921,Comedy:0.189699535,Adventure:0.168993737,Drama:0.145141816,Animation:0.115689999,Other:0.299709991}
+var data2011 = {Action:0.233686454,Adventure:0.157218739,Comedy:0.143848704,Animation:0.125959952,Drama:0.120554161,Other:0.339286151}
+var data2012 = {Action:0.257217853,Adventure:0.144962229,Animation:0.122976305,Drama:0.11287558,Comedy:0.112121243,Other:0.361968033}
+var data2013 = {Action:0.303561078,Animation:0.17435117,Adventure:0.120018721,Comedy:0.111216152,Drama:0.088568275,Other:0.290852879}
+var color = d3.scaleOrdinal()
+  .domain([0,100])
+  .range(d3.schemeDark2);
+function changePie(){
+   if (this.value==1994) { update(data1994);update(data1994);}
+   if (this.value==1995) { update(data1995);update(data1995);}
+   if (this.value==1996) { update(data1996);update(data1996);}
+   if (this.value==1997) { update(data1997);update(data1997);}
+   if (this.value==1998) { update(data1998);update(data1998);}
+   if (this.value==1999) { update(data1999);update(data1999);}
+   if (this.value==2000) { update(data2000);update(data2000);}
+   if (this.value==2001) { update(data2001);update(data2001);}
+   if (this.value==2002) { update(data2002);update(data2002);}
+   if (this.value==2003) { update(data2003);update(data2003);}
+   if (this.value==2004) { update(data2004);update(data2004);}
+   if (this.value==2005) { update(data2005);update(data2005);}
+   if (this.value==2006) { update(data2006);update(data2006);}
+   if (this.value==2007) { update(data2007);update(data2007);}
+   if (this.value==2008) { update(data2008);update(data2008);}
+   if (this.value==2009) { update(data2009);update(data2009);}
+   if (this.value==2010) { update(data2010);update(data2010);}
+   if (this.value==2011) { update(data2011);update(data2011);}
+   if (this.value==2012) { update(data2012);update(data2012);}
+   if (this.value==2013) { update(data2013);update(data2013);}
+   if (this.value==2014) { update(data2014);update(data2014);}
+  
+}
+function update(data) {
+
+  d3.selectAll("text").remove()
+  var pie = d3.pie()
+    .value(function(d) {return d.value; })
+    .sort(function(a, b) { console.log(a) ; return d3.ascending(a.key, b.key);} ) 
+  var data_ready = pie(d3.entries(data))
+
+
+  var u = svg.selectAll("path")
+    .data(data_ready)
+  u
+    .enter()
+    .append('path')
+    .merge(u)
+    .transition()
+    .duration(1000)
+    .attr('d', d3.arc()
+      .innerRadius(0)
+      .outerRadius(radius)
+    )
+    .attr('fill', function(d){ return(color(d.data.key)) })
+    .attr("stroke", "white")
+    .style("stroke-width", "2px")
+    .style("opacity", 0.8)
+
+
+  var arcGenerator = d3.arc()
+    .innerRadius(0)
+    .outerRadius(radius)
+u
+    .enter()
+    .append('text')
+    .text(function(d){ return "" + d.data.key})
+    .attr("transform", function(d) { return "translate(" + arcGenerator.centroid(d) + ")";  })
+    .style("text-anchor", "middle")
+    .style("font-size", 17)
+
+  u.exit()
+    .remove()
+
+
+var line = svg.append("path").data(data_ready)
+line
+    .enter()
+    .append('text')
+    .text(function(d){ return "" + d.data.key})
+    .attr("transform", function(d) { return "translate(" + arcGenerator.centroid(d) + ")";  })
+    .style("text-anchor", "middle")
+    .style("font-size", 17)
+}
+update(data1994)
+
+d3.select("#yearbutton").on("input", changePie )
+</script>
+</div>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<br></br>
+<h1>            &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   Movie Data</h1>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<button onclick="location.href='\index.html';">Page 1</button>
+<button onclick="location.href='\Page2.html';">Page 2</button>
+<button onclick="location.href='\Page3.html';">Page 3</button>
+<button onclick="location.href='\Page4.html';">Page 4</button>
+
+<p style=" margin-left: 2.5em;padding: 0 7em 2em 0;border-width: 0px; border-color: black; border-style:solid ;width:17%;height:85%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Here we can compare the revenue distribution of each genre of movies to Action for the period between 1994 and 2014 (Note: The update does not seem to work even though the functions were tested to work correctly, I believe it's the button triggering issue.)</p>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<select id="list">
+  <option onclick="clearBar();changeBar('Adventure');">Adventure</option>
+  <option onclick="clearBar();changeBar('Animation');">Animation</option>
+  <option onclick="clearBar();changeBar('Comedy');">Comedy</option>
+  <option onclick="clearBar();changeBar('Drama');">Drama</option>
+  <option onclick="clearBar();changeBar('ScienceFiction');">ScienceFiction</option>
+  <option onclick="clearBar();changeBar('Thriller');">Thriller</option>
+</select>
+
+
+<div id="bar">
+
+<script>
+
+d3.csv("https://raw.githubusercontent.com/767658538/498.github.io/master/Compare2.csv", function(data) {
+
+var margin = {top: 15, right: 35, bottom: 35, left: 45},
+    width = 550 - margin.left - margin.right,
+    height = 430 - margin.top - margin.bottom;
+
+var svg = d3.select("#bar")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+  var x = d3.scaleLinear()
+      .domain([0,10])     
+      .range([0, width]);
+  svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+  var histogram = d3.histogram()
+      .value(function(d) { return +(d.revenue); })  
+      .domain(x.domain())  
+      .thresholds(x.ticks(40)); 
+  function changeBar(inp){
+d3.selectAll("rect").remove();
+d3.selectAll("text").remove();
+  var bins1 = histogram(data.filter( function(d){return d.Genres === "Action"} ));
+  var bins2 = histogram(data.filter( function(d){return d.Genres === inp} ));
+  var y = d3.scaleLinear()
+      .range([height, 0]);
+      y.domain([0, 100]); 
+  svg.append("g")
+      .call(d3.axisLeft(y));
+  svg.selectAll("rect")
+      .data(bins1)
+      .enter()
+      .append("rect")
+        .attr("x", 1)
+        .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
+        .attr("width", function(d) { return x(d.x1) - x(d.x0) -1 ; })
+        .attr("height", function(d) { return height - y(d.length); })
+        .style("fill", "#9370DB")
+        .style("opacity", 0.6)
+  svg.selectAll("rect2")
+      .data(bins2)
+      .enter()
+      .append("rect")
+        .attr("x", 1)
+        .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
+        .attr("width", function(d) { return x(d.x1) - x(d.x0) -1 ; })
+        .attr("height", function(d) { return height - y(d.length); })
+        .style("fill", "#FF1694")
+        .style("opacity", 0.6)
+  svg.append("circle").attr("cx",20).attr("cy",20).attr("r", 6).style("fill", "#9370DB")
+  svg.append("circle").attr("cx",20).attr("cy",40).attr("r", 6).style("fill", "#FF1694")
+  svg.append("text").attr("x", 35).attr("y", 20).text("Action").style("font-size", "15px").attr("alignment-baseline","middle")
+  svg.append("text").attr("x", 35).attr("y", 40).text(inp).style("font-size", "15px").attr("alignment-baseline","middle")
+  svg.append("text").attr("x", -200).attr("y", -30).text("Movie count").style("font-size", "15px").attr("alignment-baseline","middle").attr("transform", "rotate(-90)");
+  svg.append("text").attr("x",150).attr("y", 390).text("Revenue (Log $)").style("font-size", "13px").attr("alignment-baseline","middle");
+  
+}
+changeBar('Adventure');
+function clearBar(){
+d3.selectAll("rect").remove();
+d3.selectAll("text").remove();
+}
+});
+</script>
+</div>
