@@ -30,7 +30,7 @@ var svg = d3.select("#bar")
   .append("g")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
-d3.csv("https://raw.githubusercontent.com/767658538/498.github.io/master/Compare.csv", function(data) {
+d3.csv("https://raw.githubusercontent.com/767658538/CS498/master/Compare.csv", function(data) {
   var x = d3.scaleLinear()
       .domain([0,10])     
       .range([0, width]);
